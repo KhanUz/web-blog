@@ -1,0 +1,32 @@
+Article Management
+Publish new articles, edit articles, delete articles
+Content editing
+The Markdown editor supports real-time preview.
+Article display
+Article list, article details page, archived by time
+Comment system
+Post comments, review comments, display comments
+Category Tags
+Article categories, tag cloud
+About page
+Blogger introduction, personal profile
+Search function
+Full-text search, search by tag
+
+
+The web site look 
+Minimalist look, with clean black and white coloring, narrow and sleek lines
+
+The article view page design:
+The nav bar on the top, is NOT fixed
+the page is splited in 2 sections (right and left). Left section contains table of content (h1,h2,h3.... since mark down is used) right section is the content   (about  20% is the left side (collapsible)). On mobile no table of contents
+on the bottom, before footer is table of other blogs linking to similar pages
+footer
+
+
+
+Article management
+A blogger has a list (table) of blogs (name, date, tags) and menu btn , where it can be selected to perform actions remove from the site , recalle (remove from publication but not the site) or edited . and new create btn is present in the page (prefereable on the right side)
+
+Content editing
+A page opens a document. The page is divided into two vertical halves, left side editing right side view

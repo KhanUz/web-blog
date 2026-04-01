@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.03) 0, rgba(0, 0, 0, 0.03) 1px, transparent 1px, transparent 48px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.025) 0, rgba(0, 0, 0, 0.025) 1px, transparent 1px, transparent 48px),
+    #f5f3ef;
+  color: #111111;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+code,
+pre {
+  font-family: "IBM Plex Mono", "Cascadia Code", "Consolas", monospace;
+}
+
+.site-shell {
+  background:
+    radial-gradient(circle at top, rgba(0, 0, 0, 0.05), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(248, 247, 243, 0.96));
+}
+
+.nav-chip {
+  @apply rounded-full border border-black/10 bg-white px-4 py-2 text-sm text-stone-600 transition hover:border-black hover:text-black;
+}
+
+.nav-chip[data-active="true"] {
+  @apply border-black bg-black text-white;
+}
+
+.panel {
+  @apply rounded-[1.75rem] border border-black/10 bg-white/90;
+}
+
+.panel-muted {
+  @apply rounded-[1.75rem] border border-black/10 bg-black text-white;
+}
+
+.eyebrow {
+  @apply text-[0.68rem] uppercase tracking-[0.4em] text-stone-500;
+}
+
+.article-copy h1,
+.article-copy h2,
+.article-copy h3,
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3 {
+  @apply font-semibold tracking-[-0.03em] text-black;
+}
+
+.article-copy h1,
+.markdown-preview h1 {
+  @apply mt-10 text-4xl;
+}
+
+.article-copy h2,
+.markdown-preview h2 {
+  @apply mt-8 text-2xl;
+}
+
+.article-copy h3,
+.markdown-preview h3 {
+  @apply mt-6 text-xl;
+}
+
+.article-copy p,
+.markdown-preview p {
+  @apply mt-4 text-[1.02rem] leading-8 text-stone-700;
+}
+
+.article-copy ul,
+.preview-list {
+  @apply mt-4 list-disc space-y-2 pl-6 text-[1.02rem] leading-8 text-stone-700;
+}
+
+.article-copy code,
+.markdown-preview code {
+  @apply rounded bg-stone-100 px-1.5 py-0.5 text-[0.9em];
+}
+
+.skeleton {
+  @apply rounded-full bg-stone-200/80;
+}
