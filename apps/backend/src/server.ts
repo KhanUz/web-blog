@@ -1,9 +1,11 @@
 import { createApp } from "./app.js";
 import { env } from "./config/env.js";
 import { connectToDatabase } from "./lib/connectToDatabase.js";
+import { seedDatabase } from "./lib/seedData.js";
 
 async function startServer() {
   await connectToDatabase();
+  await seedDatabase();
 
   const app = createApp();
 
