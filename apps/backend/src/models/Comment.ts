@@ -33,8 +33,8 @@ const commentSchema = new Schema<Comment>(
     },
     status: {
       type: String,
-      enum: ["pending", "approved", "rejected"],
-      default: "pending",
+      enum: ["approved"],
+      default: "approved",
       index: true
     }
   },

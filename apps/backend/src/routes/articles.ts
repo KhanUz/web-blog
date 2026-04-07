@@ -1,6 +1,7 @@
 import { Router } from "express";
 import mongoose from "mongoose";
 import { asyncHandler } from "../lib/asyncHandler.js";
+import { ensureArticleAccess, ensureArticleManagement, requireRole } from "../lib/auth.js";
 import { HttpError } from "../lib/httpError.js";
 import { serializeArticle, serializeComment } from "../lib/serialize.js";
 import { slugify } from "../lib/slugify.js";
@@ -53,6 +54,7 @@ async function findArticleById(id: string) {
 articlesRouter.get(
   "/",
   asyncHandler(async (request, response) => {
+    const scope = typeof request.query.scope === "string" ? request.query.scope : "public";
     const status = typeof request.query.status === "string" ? request.query.status : undefined;
     const tag = typeof request.query.tag === "string" ? request.query.tag : undefined;
     const search = typeof request.query.search === "string" ? request.query.search : undefined;
@@ -63,7 +65,14 @@ articlesRouter.get(
       removedFromSiteAt: null
     };
 
-    if (status) {
+    if (scope === "manage") {
+      const user = requireRole(request, ["owner"]);
+      query.author = user._id;
+    } else {
+      query.status = "published";
+    }
+
+    if (status && scope === "manage") {
       query.status = status;
     }
 
@@ -114,9 +123,10 @@ articlesRouter.get(
       throw new HttpError(404, "Article not found.");
     }
 
+    ensureArticleAccess(request, article);
+
     const comments = await CommentModel.find({
-      article: article._id,
-      status: "approved"
+      article: article._id
     }).sort({ createdAt: -1 });
 
     response.json({
@@ -129,6 +139,7 @@ articlesRouter.get(
 articlesRouter.post(
   "/",
   asyncHandler(async (request, response) => {
+    const user = requireRole(request, ["owner"]);
     const title = requireString(request.body.title, "title");
     const summary = requireString(request.body.summary, "summary");
     const content = requireString(request.body.content, "content");
@@ -143,6 +154,8 @@ articlesRouter.post(
     }
 
     const article = await ArticleModel.create({
+      author: user._id,
+      authorName: user.name,
       title,
       slug,
       summary,
@@ -163,6 +176,7 @@ articlesRouter.patch(
   "/:id",
   asyncHandler(async (request, response) => {
     const article = await findArticleById(getRouteParam(request.params.id, "id"));
+    ensureArticleManagement(request, article);
 
     if (typeof request.body.title === "string" && request.body.title.trim()) {
       article.title = request.body.title.trim();
@@ -200,6 +214,7 @@ articlesRouter.post(
   "/:id/publish",
   asyncHandler(async (request, response) => {
     const article = await findArticleById(getRouteParam(request.params.id, "id"));
+    ensureArticleManagement(request, article);
     article.status = "published";
     article.publishedAt = new Date();
     article.removedFromSiteAt = null;
@@ -215,6 +230,7 @@ articlesRouter.post(
   "/:id/recall",
   asyncHandler(async (request, response) => {
     const article = await findArticleById(getRouteParam(request.params.id, "id"));
+    ensureArticleManagement(request, article);
     article.status = "recalled";
     await article.save();
 
@@ -228,6 +244,7 @@ articlesRouter.delete(
   "/:id",
   asyncHandler(async (request, response) => {
     const article = await findArticleById(getRouteParam(request.params.id, "id"));
+    ensureArticleManagement(request, article);
     article.removedFromSiteAt = new Date();
     await article.save();
 
@@ -241,11 +258,10 @@ articlesRouter.get(
   "/:id/comments",
   asyncHandler(async (request, response) => {
     const article = await findArticleById(getRouteParam(request.params.id, "id"));
-    const includePending = request.query.includePending === "true";
+    ensureArticleAccess(request, article);
 
     const comments = await CommentModel.find({
-      article: article._id,
-      ...(includePending ? {} : { status: "approved" })
+      article: article._id
     }).sort({ createdAt: -1 });
 
     response.json({
@@ -258,12 +274,14 @@ articlesRouter.post(
   "/:id/comments",
   asyncHandler(async (request, response) => {
     const article = await findArticleById(getRouteParam(request.params.id, "id"));
+    ensureArticleAccess(request, article);
+    requireRole(request, ["viewer", "owner"]);
 
     const comment = await CommentModel.create({
       article: article._id,
       authorName: requireString(request.body.authorName, "authorName"),
       body: requireString(request.body.body, "body"),
-      status: "pending"
+      status: "approved"
     });
 
     response.status(201).json({

@@ -15,5 +15,9 @@
   },
   "engines": {
     "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "frontend": "^1.0.0",
+    "marked": "^17.0.5"
   }
 }

@@ -12,7 +12,8 @@ metaRouter.get(
     const result = await ArticleModel.aggregate<{ _id: string; count: number }>([
       {
         $match: {
-          removedFromSiteAt: null
+          removedFromSiteAt: null,
+          status: "published"
         }
       },
       { $unwind: "$categories" },
@@ -40,7 +41,8 @@ metaRouter.get(
     const result = await ArticleModel.aggregate<{ _id: string; count: number }>([
       {
         $match: {
-          removedFromSiteAt: null
+          removedFromSiteAt: null,
+          status: "published"
         }
       },
       { $unwind: "$tags" },
@@ -76,6 +78,7 @@ metaRouter.get(
 
     const articles = await ArticleModel.find({
       removedFromSiteAt: null,
+      status: "published",
       $or: [
         { title: new RegExp(query, "i") },
         { summary: new RegExp(query, "i") },
@@ -100,7 +103,8 @@ metaRouter.get(
     }>([
       {
         $match: {
-          removedFromSiteAt: null
+          removedFromSiteAt: null,
+          status: "published"
         }
       },
       {

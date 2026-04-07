@@ -19,10 +19,36 @@ body {
   background: transparent;
 }
 
+.login-dialog {
+  @apply fixed inset-0 m-auto w-[min(92vw,42rem)] max-w-none border-0 bg-transparent p-0;
+}
+
+.login-dialog[open] {
+  display: grid;
+  place-items: center;
+}
+
+.login-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.38);
+  backdrop-filter: blur(4px);
+}
+
+.login-dialog__backdrop {
+  @apply fixed inset-0 border-0 bg-transparent p-0;
+}
+
+.login-dialog__panel {
+  @apply relative z-10 w-full rounded-[2rem] border border-black/10 bg-white shadow-2xl;
+}
+
 button,
 input,
 textarea {
   font: inherit;
+}
+
+.editor-textarea {
+  resize: vertical;
 }
 
 code,
@@ -40,6 +66,10 @@ pre {
   @apply rounded-full border border-black/10 bg-white px-4 py-2 text-sm text-stone-600 transition hover:border-black hover:text-black;
 }
 
+.nav-chip:disabled {
+  @apply cursor-not-allowed opacity-45 hover:border-black/10 hover:text-stone-600;
+}
+
 .nav-chip[data-active="true"] {
   @apply border-black bg-black text-white;
 }
@@ -50,6 +80,14 @@ pre {
 
 .panel-muted {
   @apply rounded-[1.75rem] border border-black/10 bg-black text-white;
+}
+
+.toc-link {
+  @apply block w-full rounded-full px-3 py-2 text-left text-stone-600 transition hover:bg-stone-100 hover:text-black;
+}
+
+.toc-link[data-active="true"] {
+  @apply bg-black text-white hover:bg-black hover:text-white;
 }
 
 .eyebrow {
@@ -88,6 +126,36 @@ pre {
 .article-copy ul,
 .preview-list {
   @apply mt-4 list-disc space-y-2 pl-6 text-[1.02rem] leading-8 text-stone-700;
+}
+
+.article-copy ol,
+.preview-list-ordered {
+  @apply mt-4 list-decimal space-y-2 pl-6 text-[1.02rem] leading-8 text-stone-700;
+}
+
+.article-copy hr,
+.markdown-preview hr {
+  @apply my-8 border-0 border-t border-black/10;
+}
+
+.article-copy blockquote,
+.markdown-preview blockquote {
+  @apply mt-6 border-l-2 border-black/15 pl-5 italic text-stone-600;
+}
+
+.article-copy pre,
+.markdown-preview pre {
+  @apply mt-6 overflow-x-auto rounded-[1.25rem] bg-stone-950 px-4 py-4 text-sm leading-7 text-stone-100;
+}
+
+.article-copy pre code,
+.markdown-preview pre code {
+  @apply bg-transparent p-0 text-inherit;
+}
+
+.article-copy a,
+.markdown-preview a {
+  @apply underline decoration-black/30 underline-offset-4 transition hover:decoration-black;
 }
 
 .article-copy code,
