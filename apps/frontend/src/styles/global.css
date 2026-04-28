@@ -25,10 +25,12 @@
 }
 
 html {
+    height: 100%;
     scroll-behavior: smooth;
 }
 
 body {
+    min-height: 100%;
     margin: 0;
     background: transparent;
 }
@@ -72,6 +74,7 @@ pre {
 }
 
 .site-shell {
+    @apply flex min-h-dvh flex-col;
     background:
         radial-gradient(circle at top, rgba(0, 0, 0, 0.05), transparent 28%),
         linear-gradient(
@@ -83,6 +86,14 @@ pre {
 
 .app-frame {
     @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 xl:px-10;
+}
+
+.site-main {
+    @apply flex-1;
+}
+
+.site-main__frame {
+    @apply flex h-full flex-col;
 }
 
 .site-nav {
@@ -133,6 +144,10 @@ pre {
     @apply rounded-[1.75rem] border border-black/10 bg-white/90;
 }
 
+.panel-link {
+    @apply block rounded-[1.75rem] border border-black/10 bg-white/90 p-6 transition hover:border-black/20 hover:bg-white;
+}
+
 .panel-muted {
     @apply rounded-[1.75rem] border border-black/10 bg-black text-white;
 }
@@ -143,6 +158,28 @@ pre {
 
 .panel-head-compact {
     @apply border-b border-black/10 pb-4;
+}
+
+.panel-pad {
+    @apply p-6 sm:p-8;
+}
+
+.article-layout {
+    @apply grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start;
+}
+
+.toc-sidebar {
+    @apply hidden lg:sticky lg:top-6 lg:block lg:self-start;
+}
+
+.toc-panel {
+    @apply rounded-[1.75rem] border border-black/10 bg-white/90;
+    max-height: calc(100vh - 3rem);
+    overflow: hidden;
+}
+
+.toc-panel__body {
+    max-height: calc(100vh - 7.5rem);
 }
 
 .field-input {

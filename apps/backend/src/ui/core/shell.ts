@@ -39,12 +39,10 @@ export function renderNotice(notice?: Notice): string {
     }
 
     const toneClass =
-        notice.tone === "ok"
-            ? "border-black/10 bg-stone-50 text-stone-700"
-            : "border-red-200 bg-red-50 text-red-700";
+        notice.tone === "ok" ? "notice-ok" : "notice-error";
 
     return `
-    <div class="rounded-[1rem] border px-4 py-3 text-sm ${toneClass}">
+    <div class="notice ${toneClass}">
       ${escapeHtml(notice.message)}
     </div>
   `;
@@ -93,8 +91,8 @@ export function renderAppShell(page: ShellPage): string {
         </div>
       </div>
 
-      <main class="w-full py-8 lg:py-10">
-        <div class="app-frame space-y-4">
+      <main class="site-main w-full py-8 lg:py-10">
+        <div class="app-frame site-main__frame space-y-4">
           ${renderNotice(page.notice)}
           ${page.content}
         </div>

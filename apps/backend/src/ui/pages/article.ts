@@ -28,7 +28,7 @@ export function renderArticlePage(
         </div>
       </header>
 
-      <div class="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start">
+      <div class="article-layout">
         ${renderToc(tocItems)}
 
         <div class="space-y-6">

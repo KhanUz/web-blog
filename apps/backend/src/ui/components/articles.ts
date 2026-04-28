@@ -6,7 +6,7 @@ import { articleDisplayDate, formatDate, renderEmptyState } from "./common.js";
 
 export function renderArticleCard(article: ArticleDocument): string {
   return `
-    <a class="panel block p-6 transition hover:border-black/20 hover:bg-white" href="/articles/${escapeHtml(article.slug)}">
+    <a class="panel-link" href="/articles/${escapeHtml(article.slug)}">
       <p class="eyebrow">${escapeHtml(article.categories[0] ?? "Article")}</p>
       <h4 class="section-title">${escapeHtml(article.title)}</h4>
       <p class="body-text">${escapeHtml(article.summary)}</p>
@@ -24,14 +24,14 @@ export function renderToc(items: TocItem[]): string {
   }
 
   return `
-    <aside class="hidden lg:sticky lg:top-6 lg:block lg:self-start">
-      <div class="panel max-h-[calc(100vh-3rem)] overflow-hidden">
+    <aside class="toc-sidebar" data-toc-panel>
+      <div class="toc-panel">
         <div class="border-b border-black/10 px-5 py-4">
           <p class="text-sm font-medium text-black">On this page</p>
         </div>
-        <div class="max-h-[calc(100vh-7.5rem)] space-y-2 overflow-y-auto px-5 py-4 text-sm">
+        <div class="toc-panel__body space-y-2 overflow-y-auto px-5 py-4 text-sm" data-toc-body>
           ${items.map((item) => `
-            <a class="toc-link ${item.level === 2 ? "pl-4" : item.level === 3 ? "pl-7" : ""}" href="#${escapeHtml(item.id)}">
+            <a class="toc-link ${item.level === 2 ? "pl-4" : item.level === 3 ? "pl-7" : ""}" data-active="false" href="#${escapeHtml(item.id)}">
               ${escapeHtml(item.label)}
             </a>
           `).join("")}
@@ -81,36 +81,34 @@ export function renderRelatedArticles(related: ArticleDocument[]): string {
 export function renderComments(article: ArticleDocument, comments: CommentDocument[], canComment: boolean, currentUserName: string): string {
   return `
     <section id="comments" class="panel p-6 sm:p-8">
-      <div class="page-header items-start gap-5">
-        <header>
-          <p class="eyebrow">Discussion</p>
-          <h3 class="section-title">Join the conversation</h3>
-          <p class="body-text">${comments.length} visible response${comments.length === 1 ? "" : "s"} so far.</p>
-        </header>
-        ${
-          canComment
-            ? `
-              <form
-                class="grid w-full max-w-xl gap-3"
-                action="/articles/${escapeHtml(article.slug)}/comments"
-                method="post"
-                hx-post="/articles/${escapeHtml(article.slug)}/comments"
-                hx-push-url="false"
-              >
-                <input class="field-input" name="authorName" type="text" placeholder="Display name" value="${escapeHtml(currentUserName)}" required />
-                <textarea class="field-textarea" name="body" placeholder="Share a thoughtful response" required></textarea>
-                <div class="flex justify-end">
-                  <button class="nav-chip" type="submit">Post comment</button>
-                </div>
-              </form>
-            `
-            : `
-              <p class="body-text w-full max-w-xl rounded-[1.5rem] border border-black/10 bg-stone-50 p-5">
-                Sign in as a viewer or the owner to join the discussion. Readers without an account can still browse the article and existing comments.
-              </p>
-            `
-        }
-      </div>
+      <header>
+        <p class="eyebrow">Discussion</p>
+        <h3 class="section-title">Join the conversation</h3>
+        <p class="body-text">${comments.length} visible response${comments.length === 1 ? "" : "s"} so far.</p>
+      </header>
+      ${
+        canComment
+          ? `
+            <form
+              class="mt-6 grid  gap-3"
+              action="/articles/${escapeHtml(article.slug)}/comments"
+              method="post"
+              hx-post="/articles/${escapeHtml(article.slug)}/comments"
+              hx-push-url="false"
+            >
+              <input class="field-input" name="authorName" type="text" placeholder="Display name" value="${escapeHtml(currentUserName)}" required />
+              <textarea class="field-textarea" name="body" placeholder="Share a thoughtful response" required></textarea>
+              <div class="flex justify-end">
+                <button class="nav-chip" type="submit">Post comment</button>
+              </div>
+            </form>
+          `
+          : `
+            <p class="body-text mt-6 max-w-xl rounded-[1.5rem] border border-black/10 bg-stone-50 p-5">
+              Sign in as a viewer or the owner to join the discussion. Readers without an account can still browse the article and existing comments.
+            </p>
+          `
+      }
       <div class="mt-6 space-y-4">
         ${
           comments.length > 0

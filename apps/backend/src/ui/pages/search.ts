@@ -7,12 +7,6 @@ type TagCount = {
     count: number;
 };
 
-type ArchiveEntry = {
-    year: number;
-    month: number;
-    count: number;
-};
-
 function renderSearchResults(results: ArticleDocument[]): string {
     return results.length > 0
         ? results
@@ -37,7 +31,6 @@ export function renderSearchPage(
     query: string,
     results: ArticleDocument[],
     tags: TagCount[],
-    archives: ArchiveEntry[],
 ): string {
     return `
     <section class="space-y-8">
@@ -46,7 +39,7 @@ export function renderSearchPage(
         <h2 class="page-title">Full-text search over published writing</h2>
       </header>
 
-      <section class="panel p-6 sm:p-8">
+      <section class="panel panel-pad">
         <form action="/search" method="get" class="space-y-5">
           <input
             class="field-search"
@@ -56,13 +49,11 @@ export function renderSearchPage(
             value="${escapeHtml(query)}"
           />
 
-          <div class="">
+          <div class="space-y-5">
             <div class="flex flex-wrap items-center gap-2">
               <p class="text-xs uppercase tracking-[0.25em] text-stone-500">Tags</p>
               ${tags.map((item) => `<a class="nav-chip" href="/search?q=${encodeURIComponent(item.tag)}">${escapeHtml(item.tag)} (${item.count})</a>`).join("")}
             </div>
-
-           
           </div>
         </form>
       </section>

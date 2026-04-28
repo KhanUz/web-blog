@@ -207,28 +207,13 @@ async function renderEditor(
 
 async function renderSearch(request: Request, response: Response, notice?: Notice): Promise<void> {
   const query = typeof request.query.q === "string" ? request.query.q.trim() : "";
-  const year = Number(request.query.year);
-  const month = Number(request.query.month);
 
-  const [tags, archives, results] = await Promise.all([
+  const [tags, results] = await Promise.all([
     ArticleModel.aggregate<{ _id: string; count: number }>([
       { $match: { removedFromSiteAt: null, status: "published" } },
       { $unwind: "$tags" },
       { $group: { _id: "$tags", count: { $sum: 1 } } },
       { $sort: { count: -1, _id: 1 } }
-    ]),
-    ArticleModel.aggregate<{ _id: { year: number; month: number }; count: number }>([
-      { $match: { removedFromSiteAt: null, status: "published" } },
-      {
-        $group: {
-          _id: {
-            year: { $year: "$createdAt" },
-            month: { $month: "$createdAt" }
-          },
-          count: { $sum: 1 }
-        }
-      },
-      { $sort: { "_id.year": -1, "_id.month": -1 } }
     ]),
     ArticleModel.find({
       removedFromSiteAt: null,
@@ -243,15 +228,6 @@ async function renderSearch(request: Request, response: Response, notice?: Notic
               { categories: new RegExp(query, "i") }
             ]
           }
-        : !Number.isNaN(year) && year > 0
-          ? {
-              createdAt: {
-                $gte: new Date(Date.UTC(year, !Number.isNaN(month) && month >= 1 ? month - 1 : 0, 1)),
-                $lt: !Number.isNaN(month) && month >= 1
-                  ? new Date(Date.UTC(year, month, 1))
-                  : new Date(Date.UTC(year + 1, 0, 1))
-              }
-            }
           : {})
     }).sort({ createdAt: -1 })
   ]);
@@ -263,8 +239,7 @@ async function renderSearch(request: Request, response: Response, notice?: Notic
     content: renderSearchPage(
       query,
       results,
-      tags.map((item) => ({ tag: item._id, count: item.count })),
-      archives.map((item) => ({ year: item._id.year, month: item._id.month, count: item.count }))
+      tags.map((item) => ({ tag: item._id, count: item.count }))
     )
   });
 }

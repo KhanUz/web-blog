@@ -3,7 +3,7 @@ import { renderManageTable } from "../components/forms.js";
 
 export function renderManagePage(articles: ArticleDocument[]): string {
   return `
-    <section class="space-y-8">
+    <section class="flex h-full flex-col space-y-8">
       <header class="page-header">
         <div>
           <p class="eyebrow">Owner workspace</p>

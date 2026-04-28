@@ -8,7 +8,7 @@ export type AccountGuestMode = "login" | "register";
 
 export function renderManageTable(articles: ArticleDocument[]): string {
   return `
-    <section class="panel overflow-hidden">
+    <section class="panel flex flex-1 flex-col overflow-hidden">
       <header class="panel-head flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p class="text-sm font-medium text-black">Your articles</p>
@@ -18,7 +18,7 @@ export function renderManageTable(articles: ArticleDocument[]): string {
         </div>
         <a class="nav-chip" href="/editor">Create new article</a>
       </header>
-      <div class="overflow-x-auto">
+      <div class="flex-1 overflow-x-auto">
         <table class="min-w-full text-left text-sm">
           <thead class="border-b border-black/10 bg-stone-50 text-stone-500">
             <tr>
