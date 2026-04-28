@@ -1,41 +1,32 @@
 import cors from "cors";
 import express from "express";
 import morgan from "morgan";
+import { resolve } from "node:path";
 import { resolveCurrentUser } from "./lib/auth.js";
 import { HttpError } from "./lib/httpError.js";
 import { articlesRouter } from "./routes/articles.js";
 import { healthRouter } from "./routes/health.js";
 import { metaRouter } from "./routes/meta.js";
+import { siteRouter } from "./routes/site.js";
 import { usersRouter } from "./routes/users.js";
+import { getFrontendDistDir } from "./ui/assets.js";
 
 export function createApp() {
   const app = express();
 
   app.use(cors());
   app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use(morgan("dev"));
   app.use(resolveCurrentUser);
-
-  app.get("/", (_request, response) => {
-    response.json({
-      message: "Web blog backend is running.",
-      endpoints: {
-        health: "/api/health",
-        articles: "/api/articles",
-        search: "/api/meta/search?q=design",
-        tags: "/api/meta/tags",
-        categories: "/api/meta/categories",
-        archives: "/api/meta/archives",
-        about: "/api/meta/about",
-        session: "/api/users/session"
-      }
-    });
-  });
+  app.use("/vendor", express.static(resolve(process.cwd(), "../../node_modules/htmx.org/dist")));
+  app.use("/assets", express.static(resolve(getFrontendDistDir(), "assets")));
 
   app.use("/api/health", healthRouter);
   app.use("/api/articles", articlesRouter);
   app.use("/api/meta", metaRouter);
   app.use("/api/users", usersRouter);
+  app.use(siteRouter);
 
   app.use((request, _response, next) => {
     next(new HttpError(404, `Route not found: ${request.method} ${request.originalUrl}`));

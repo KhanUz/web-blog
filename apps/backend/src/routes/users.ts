@@ -3,6 +3,7 @@ import { asyncHandler } from "../lib/asyncHandler.js";
 import { requireAuthenticated } from "../lib/auth.js";
 import { HttpError } from "../lib/httpError.js";
 import { createSessionToken, hashPassword, hashSessionToken, verifyPassword } from "../lib/passwords.js";
+import { clearSessionCookie, setSessionCookie } from "../lib/session.js";
 import { serializeUser } from "../lib/serialize.js";
 import { UserModel } from "../models/User.js";
 import type { UserRole } from "../types/blog.js";
@@ -66,6 +67,8 @@ usersRouter.post(
       sessionTokenHash: hashSessionToken(sessionToken)
     });
 
+    setSessionCookie(response, sessionToken);
+
     response.status(201).json({
       user: serializeUser(user),
       sessionToken
@@ -89,6 +92,8 @@ usersRouter.post(
     user.sessionTokenHash = hashSessionToken(sessionToken);
     await user.save();
 
+    setSessionCookie(response, sessionToken);
+
     response.json({
       user: serializeUser(user),
       sessionToken
@@ -102,6 +107,7 @@ usersRouter.post(
     const user = requireAuthenticated(request);
     user.sessionTokenHash = null;
     await user.save();
+    clearSessionCookie(response);
 
     response.json({
       success: true

@@ -6,6 +6,7 @@ import type { ArticleDocument } from "../models/Article.js";
 import type { UserDocument } from "../models/User.js";
 import type { UserRole } from "../types/blog.js";
 import { hashSessionToken } from "./passwords.js";
+import { readSessionToken } from "./session.js";
 
 function getHeaderValue(value: string | string[] | undefined): string | undefined {
   if (typeof value === "string") {
@@ -25,7 +26,7 @@ export async function resolveCurrentUser(
   next: express.NextFunction
 ): Promise<void> {
   const authHeader = getHeaderValue(request.header("authorization"));
-  const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7).trim() : undefined;
+  const token = readSessionToken(request) ?? (authHeader?.startsWith("Bearer ") ? authHeader.slice(7).trim() : undefined);
 
   request.currentUser = null;
   request.actorRole = "guest";
