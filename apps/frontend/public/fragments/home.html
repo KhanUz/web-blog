@@ -1,12 +1,12 @@
 <section class="space-y-8" data-page-name="home">
   <div class="grid gap-5 lg:grid-cols-[1.35fr_0.95fr]">
     <article class="panel overflow-hidden">
-      <div class="border-b border-black/10 px-6 py-5 sm:px-8">
+      <header class="panel-head py-5">
         <p class="eyebrow">Overview</p>
-        <h2 class="mt-3 max-w-3xl text-3xl font-semibold tracking-[-0.04em] text-black sm:text-4xl">
+        <h2 class="page-title max-w-3xl text-3xl sm:text-4xl">
           A frontend shaped for a writer, a reader, and a lean admin workflow.
         </h2>
-      </div>
+      </header>
       <div class="grid gap-px bg-black/10 sm:grid-cols-3">
         <div class="bg-white px-6 py-6">
           <p class="text-sm font-medium text-black">Article reading</p>
@@ -25,7 +25,7 @@
 
     <aside class="panel-muted p-6 sm:p-8">
       <p class="eyebrow !text-stone-400">Interpretation</p>
-      <div class="mt-4 space-y-4 text-sm leading-7 text-stone-300">
+      <div class="body-text-muted mt-4 space-y-4">
         <p>The brief calls for visual restraint rather than decorative UI, so the prototype uses thin borders, generous spacing, and black-and-white contrast instead of heavy color.</p>
         <p>HTMX handles view swaps and small action feedback, while TypeScript manages behaviors that need client state, especially markdown preview and page-level interaction.</p>
       </div>
@@ -35,35 +35,35 @@
   <div class="grid gap-5 lg:grid-cols-3">
     <section class="panel p-6">
       <p class="eyebrow">Reading surface</p>
-      <h3 class="mt-3 text-2xl font-semibold tracking-[-0.03em] text-black">Article detail</h3>
-      <p class="mt-3 text-sm leading-7 text-stone-600">Desktop keeps the TOC on the left at roughly one-fifth width. Mobile removes it to keep the text column clean.</p>
+      <h3 class="section-title">Article detail</h3>
+      <p class="body-text mt-3">Desktop keeps the TOC on the left at roughly one-fifth width. Mobile removes it to keep the text column clean.</p>
       <button class="mt-5 nav-chip" data-page="article" hx-get="/fragments/article.html" hx-target="#page-shell" hx-swap="innerHTML">Open article layout</button>
     </section>
 
     <section class="panel p-6">
       <p class="eyebrow">Author workflow</p>
-      <h3 class="mt-3 text-2xl font-semibold tracking-[-0.03em] text-black">Management table</h3>
-      <p class="mt-3 text-sm leading-7 text-stone-600">The table keeps name, date, and tags visible, with compact action menus aligned to the right.</p>
+      <h3 class="section-title">Management table</h3>
+      <p class="body-text mt-3">The table keeps name, date, and tags visible, with compact action menus aligned to the right.</p>
       <button class="mt-5 nav-chip" data-page="manage" hx-get="/fragments/manage.html" hx-target="#page-shell" hx-swap="innerHTML">Open management</button>
     </section>
 
     <section class="panel p-6">
       <p class="eyebrow">Content creation</p>
-      <h3 class="mt-3 text-2xl font-semibold tracking-[-0.03em] text-black">Markdown editor</h3>
-      <p class="mt-3 text-sm leading-7 text-stone-600">Two vertical halves are maintained on desktop and stacked on smaller screens so the editor remains usable everywhere.</p>
+      <h3 class="section-title">Markdown editor</h3>
+      <p class="body-text mt-3">Two vertical halves are maintained on desktop and stacked on smaller screens so the editor remains usable everywhere.</p>
       <button class="mt-5 nav-chip" data-page="editor" hx-get="/fragments/editor.html" hx-target="#page-shell" hx-swap="innerHTML">Open editor</button>
     </section>
   </div>
 
   <section class="panel p-6 sm:p-8">
-    <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-      <div>
+    <div class="page-header items-start gap-6">
+      <header>
         <p class="eyebrow">Coverage</p>
-        <h3 class="mt-3 text-3xl font-semibold tracking-[-0.04em] text-black">Pages mapped from the brief</h3>
-      </div>
-      <div class="max-w-2xl text-sm leading-7 text-stone-600">
+        <h3 class="section-title-lg">Pages mapped from the brief</h3>
+      </header>
+      <p class="body-text max-w-2xl">
         Search and tag discovery, archive browsing, comments, and the about page are represented in the navigation. This keeps the scaffold close to the eventual product without forcing backend data too early.
-      </div>
+      </p>
     </div>
   </section>
 </section>

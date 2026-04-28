@@ -1,7 +1,7 @@
-import type { ArticleDocument } from "../models/Article.js";
-import type { CommentDocument } from "../models/Comment.js";
-import type { ProfileDocument } from "../models/Profile.js";
-import type { UserDocument } from "../models/User.js";
+import type { ArticleDocument } from "../../models/Article.js";
+import type { CommentDocument } from "../../models/Comment.js";
+import type { ProfileDocument } from "../../models/Profile.js";
+import type { UserDocument } from "../../models/User.js";
 
 export function serializeArticle(article: ArticleDocument) {
   return {

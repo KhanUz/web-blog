@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { asyncHandler } from "../lib/asyncHandler.js";
-import { serializeArticle, serializeProfile } from "../lib/serialize.js";
-import { ArticleModel } from "../models/Article.js";
-import { ProfileModel } from "../models/Profile.js";
+import { serializeArticle, serializeProfile } from "../../lib/api/serialize.js";
+import { asyncHandler } from "../../lib/http/asyncHandler.js";
+import { ArticleModel } from "../../models/Article.js";
+import { ProfileModel } from "../../models/Profile.js";
 
 export const metaRouter = Router();
 

@@ -1,7 +1,7 @@
 import type { ArticleDocument } from "../../models/Article.js";
 import type { CommentDocument } from "../../models/Comment.js";
-import { escapeHtml } from "../html.js";
-import { renderArticleContent } from "../markdown.js";
+import { escapeHtml } from "../core/shell.js";
+import { renderArticleContent } from "../core/markdown.js";
 import { renderComments, renderRelatedArticles, renderToc } from "../components/articles.js";
 import { articleDisplayDate } from "../components/common.js";
 
@@ -16,11 +16,11 @@ export function renderArticlePage(
 
   return `
     <section class="space-y-8">
-      <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <header class="page-header">
         <div>
           <p class="eyebrow">Article</p>
-          <h2 class="mt-3 text-4xl font-semibold tracking-[-0.04em] text-black">${escapeHtml(article.title)}</h2>
-          <p class="mt-3 max-w-3xl text-sm leading-7 text-stone-600">${escapeHtml(article.summary)}</p>
+          <h2 class="page-title">${escapeHtml(article.title)}</h2>
+          <p class="body-text max-w-3xl">${escapeHtml(article.summary)}</p>
         </div>
         <div class="text-right text-sm text-stone-500">
           <div>${escapeHtml(articleDisplayDate(article))}</div>
@@ -34,10 +34,10 @@ export function renderArticlePage(
         <div class="space-y-6">
           <article class="panel px-6 py-8 sm:px-10 sm:py-12">
             <div class="flex flex-wrap items-center gap-3 border-b border-black/10 pb-6">
-              <span class="rounded-full border border-black/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-stone-500">${escapeHtml(articleDisplayDate(article))}</span>
-              <span class="rounded-full border border-black/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-stone-500">${escapeHtml(article.authorName)}</span>
+              <span class="meta-pill">${escapeHtml(articleDisplayDate(article))}</span>
+              <span class="meta-pill">${escapeHtml(article.authorName)}</span>
               ${article.categories.map((category) => `
-                <span class="rounded-full border border-black/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-stone-500">${escapeHtml(category)}</span>
+                <span class="meta-pill">${escapeHtml(category)}</span>
               `).join("")}
             </div>
 

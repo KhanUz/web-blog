@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 type ViteManifest = Record<string, { file: string; css?: string[] }>;
 
 const currentDir = fileURLToPath(new URL(".", import.meta.url));
-const frontendDistDir = resolve(currentDir, "../../frontend/dist");
+const frontendDistDir = resolve(currentDir, "../../../../frontend/dist");
 const frontendManifestPath = resolve(frontendDistDir, ".vite/manifest.json");
 const frontendDevOrigin = process.env.FRONTEND_DEV_ORIGIN ?? "http://127.0.0.1:5173";
 
@@ -33,12 +33,12 @@ export function renderFrontendAssetTags(): string {
     return [
       `<link rel="stylesheet" href="${frontendDevOrigin}/src/styles/global.css" />`,
       `<script type="module" src="${frontendDevOrigin}/@vite/client"></script>`,
-      `<script type="module" src="${frontendDevOrigin}/src/app/shell.ts"></script>`
+      `<script type="module" src="${frontendDevOrigin}/src/entry.ts"></script>`
     ].join("");
   }
 
   const manifest = readManifest();
-  const entry = manifest?.["src/app/shell.ts"] ?? manifest?.["index.html"];
+  const entry = manifest?.["src/entry.ts"] ?? manifest?.["index.html"];
 
   if (!entry) {
     return "";

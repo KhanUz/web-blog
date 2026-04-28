@@ -1,8 +1,8 @@
 <section class="space-y-8" data-page-name="article">
-  <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+  <header class="page-header">
     <div>
       <p class="eyebrow">Article view</p>
-      <h2 class="mt-3 text-4xl font-semibold tracking-[-0.04em] text-black">Long-form reading with a collapsible table of contents</h2>
+      <h2 class="page-title">Long-form reading with a collapsible table of contents</h2>
     </div>
     <div class="text-sm text-stone-500">Top navigation scrolls away naturally. The page itself carries the reading rhythm.</div>
   </header>
@@ -27,9 +27,9 @@
     <div class="space-y-6">
       <article class="panel px-6 py-8 sm:px-10 sm:py-12">
         <div class="flex flex-wrap items-center gap-3 border-b border-black/10 pb-6">
-          <span class="rounded-full border border-black/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-stone-500">March 28, 2026</span>
-          <span class="rounded-full border border-black/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-stone-500">Interface</span>
-          <span class="rounded-full border border-black/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-stone-500">Writing</span>
+          <span class="meta-pill">March 28, 2026</span>
+          <span class="meta-pill">Interface</span>
+          <span class="meta-pill">Writing</span>
         </div>
 
         <div class="article-copy pt-8">
@@ -57,10 +57,10 @@
       </article>
 
       <section class="panel overflow-hidden">
-        <div class="border-b border-black/10 px-6 py-4 sm:px-8">
+        <header class="panel-head">
           <p class="eyebrow">Similar posts</p>
-          <h3 class="mt-2 text-2xl font-semibold tracking-[-0.03em] text-black">Continue reading</h3>
-        </div>
+          <h3 class="section-title">Continue reading</h3>
+        </header>
         <div class="overflow-x-auto">
           <table class="min-w-full text-left text-sm">
             <thead class="border-b border-black/10 text-stone-500">
@@ -92,14 +92,14 @@
       </section>
 
       <section class="panel p-6 sm:p-8">
-        <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div>
+        <div class="page-header items-start gap-5">
+          <header>
             <p class="eyebrow">Comment system</p>
-            <h3 class="mt-2 text-2xl font-semibold tracking-[-0.03em] text-black">Reader discussion</h3>
-          </div>
+            <h3 class="section-title">Reader discussion</h3>
+          </header>
           <form class="grid w-full max-w-xl gap-3">
-            <input class="rounded-[1.2rem] border border-black/10 bg-stone-50 px-4 py-3 outline-none transition focus:border-black" type="text" placeholder="Name" />
-            <textarea class="min-h-28 rounded-[1.2rem] border border-black/10 bg-stone-50 px-4 py-3 outline-none transition focus:border-black" placeholder="Write a comment"></textarea>
+            <input class="field-input" type="text" placeholder="Name" />
+            <textarea class="field-textarea" placeholder="Write a comment"></textarea>
             <div class="flex justify-end">
               <button class="nav-chip" type="button" hx-get="/fragments/actions/comment-posted.html" hx-target="#comment-feedback" hx-swap="innerHTML">Post comment</button>
             </div>

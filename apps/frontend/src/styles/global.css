@@ -1,97 +1,211 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: light;
-  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.03) 0, rgba(0, 0, 0, 0.03) 1px, transparent 1px, transparent 48px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.025) 0, rgba(0, 0, 0, 0.025) 1px, transparent 1px, transparent 48px),
-    #f5f3ef;
-  color: #111111;
+    color-scheme: light;
+    font-family:
+        "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino,
+        Georgia, serif;
+    background:
+        linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.03) 0,
+            rgba(0, 0, 0, 0.03) 1px,
+            transparent 1px,
+            transparent 48px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.025) 0,
+            rgba(0, 0, 0, 0.025) 1px,
+            transparent 1px,
+            transparent 48px
+        ),
+        #f5f3ef;
+    color: #111111;
 }
 
 html {
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
-  background: transparent;
+    margin: 0;
+    background: transparent;
 }
 
 .login-dialog {
-  @apply fixed inset-0 m-auto w-[min(92vw,42rem)] max-w-none border-0 bg-transparent p-0;
+    @apply fixed inset-0 m-auto w-[min(92vw,42rem)] max-w-none border-0 bg-transparent p-0;
 }
 
 .login-dialog[open] {
-  display: grid;
-  place-items: center;
+    display: grid;
+    place-items: center;
 }
 
 .login-dialog::backdrop {
-  background: rgba(15, 23, 42, 0.38);
-  backdrop-filter: blur(4px);
+    background: rgba(15, 23, 42, 0.38);
+    backdrop-filter: blur(4px);
 }
 
 .login-dialog__backdrop {
-  @apply fixed inset-0 border-0 bg-transparent p-0;
+    @apply fixed inset-0 border-0 bg-transparent p-0;
 }
 
 .login-dialog__panel {
-  @apply relative z-10 w-full rounded-[2rem] border border-black/10 bg-white shadow-2xl;
+    @apply relative z-10 w-full rounded-[2rem] border border-black/10 bg-white shadow-2xl;
 }
 
 button,
 input,
 textarea {
-  font: inherit;
+    font: inherit;
 }
 
 .editor-textarea {
-  resize: vertical;
+    resize: none;
+    overflow-y: hidden;
 }
 
 code,
 pre {
-  font-family: "IBM Plex Mono", "Cascadia Code", "Consolas", monospace;
+    font-family: "IBM Plex Mono", "Cascadia Code", "Consolas", monospace;
 }
 
 .site-shell {
-  background:
-    radial-gradient(circle at top, rgba(0, 0, 0, 0.05), transparent 28%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(248, 247, 243, 0.96));
+    background:
+        radial-gradient(circle at top, rgba(0, 0, 0, 0.05), transparent 28%),
+        linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.88),
+            rgba(248, 247, 243, 0.96)
+        );
+}
+
+.app-frame {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 xl:px-10;
+}
+
+.site-nav {
+    @apply flex justify-center;
+}
+
+.site-nav__inner {
+    @apply inline-flex flex-wrap justify-center gap-2 rounded-full px-3 py-2;
 }
 
 .nav-chip {
-  @apply rounded-full border border-black/10 bg-white px-4 py-2 text-sm text-stone-600 transition hover:border-black hover:text-black;
+    @apply rounded-full border border-black/10 bg-white px-4 py-2 text-sm text-stone-600 transition hover:border-black hover:text-black;
 }
 
 .nav-chip:disabled {
-  @apply cursor-not-allowed opacity-45 hover:border-black/10 hover:text-stone-600;
+    @apply cursor-not-allowed opacity-45 hover:border-black/10 hover:text-stone-600;
 }
 
 .nav-chip[data-active="true"] {
-  @apply border-black bg-black text-white;
+    @apply border-black bg-black text-white;
+}
+
+.page-header {
+    @apply flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between;
+}
+
+.page-title {
+    @apply text-4xl font-semibold tracking-[-0.04em] text-black;
+}
+
+.section-title {
+    @apply text-2xl font-semibold tracking-[-0.03em] text-black;
+}
+
+.section-title-lg {
+    @apply text-3xl font-semibold tracking-[-0.04em] text-black;
+}
+
+.body-text {
+    @apply text-sm leading-7 text-stone-600;
+}
+
+.body-text-muted {
+    @apply text-sm leading-7 text-stone-300;
 }
 
 .panel {
-  @apply rounded-[1.75rem] border border-black/10 bg-white/90;
+    @apply rounded-[1.75rem] border border-black/10 bg-white/90;
 }
 
 .panel-muted {
-  @apply rounded-[1.75rem] border border-black/10 bg-black text-white;
+    @apply rounded-[1.75rem] border border-black/10 bg-black text-white;
+}
+
+.panel-head {
+    @apply border-b border-black/10 px-6 py-4 sm:px-8;
+}
+
+.panel-head-compact {
+    @apply border-b border-black/10 pb-4;
+}
+
+.field-input {
+    @apply w-full rounded-[1.2rem] border border-black/10 bg-stone-50 px-4 py-3 outline-none transition focus:border-black;
+}
+
+.field-textarea {
+    @apply min-h-28 w-full rounded-[1.2rem] border border-black/10 bg-stone-50 px-4 py-3 leading-7 outline-none transition focus:border-black;
+}
+
+.field-search {
+    @apply w-full rounded-[1.35rem] border border-black/10 bg-stone-50 px-5 py-4 text-lg outline-none transition focus:border-black;
+}
+
+.meta-pill {
+    @apply rounded-full border border-black/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-stone-500;
+}
+
+.tag-pill {
+    @apply rounded-full border border-black/10 px-3 py-2 text-sm text-stone-600;
+}
+
+.tag-pill-muted {
+    @apply rounded-full border border-white/10 px-3 py-2;
+}
+
+.notice {
+    @apply rounded-[1.2rem] border px-4 py-3 text-sm;
+}
+
+.notice-ok {
+    @apply border-black/10 bg-stone-50 text-stone-700;
+}
+
+.notice-error {
+    @apply border-red-200 bg-red-50 text-red-700;
+}
+
+.eyebrow + .page-title,
+.eyebrow + .section-title,
+.meta-pill + .section-title {
+    @apply mt-3;
+}
+
+.eyebrow + .section-title-lg {
+    @apply mt-3;
+}
+
+.section-title + .body-text,
+.page-title + .body-text {
+    @apply mt-3;
 }
 
 .toc-link {
-  @apply block w-full rounded-full px-3 py-2 text-left text-stone-600 transition hover:bg-stone-100 hover:text-black;
+    @apply block w-full rounded-full px-3 py-2 text-left text-stone-600 transition hover:bg-stone-100 hover:text-black;
 }
 
 .toc-link[data-active="true"] {
-  @apply bg-black text-white hover:bg-black hover:text-white;
+    @apply bg-black text-white hover:bg-black hover:text-white;
 }
 
 .eyebrow {
-  @apply text-[0.68rem] uppercase tracking-[0.4em] text-stone-500;
+    @apply text-[0.68rem] uppercase tracking-[0.4em] text-stone-500;
 }
 
 .article-copy h1,
@@ -100,69 +214,69 @@ pre {
 .markdown-preview h1,
 .markdown-preview h2,
 .markdown-preview h3 {
-  @apply font-semibold tracking-[-0.03em] text-black;
+    @apply font-semibold tracking-[-0.03em] text-black;
 }
 
 .article-copy h1,
 .markdown-preview h1 {
-  @apply mt-10 text-4xl;
+    @apply mt-10 text-4xl;
 }
 
 .article-copy h2,
 .markdown-preview h2 {
-  @apply mt-8 text-2xl;
+    @apply mt-8 text-2xl;
 }
 
 .article-copy h3,
 .markdown-preview h3 {
-  @apply mt-6 text-xl;
+    @apply mt-6 text-xl;
 }
 
 .article-copy p,
 .markdown-preview p {
-  @apply mt-4 text-[1.02rem] leading-8 text-stone-700;
+    @apply mt-4 text-[1.02rem] leading-8 text-stone-700;
 }
 
 .article-copy ul,
 .preview-list {
-  @apply mt-4 list-disc space-y-2 pl-6 text-[1.02rem] leading-8 text-stone-700;
+    @apply mt-4 list-disc space-y-2 pl-6 text-[1.02rem] leading-8 text-stone-700;
 }
 
 .article-copy ol,
 .preview-list-ordered {
-  @apply mt-4 list-decimal space-y-2 pl-6 text-[1.02rem] leading-8 text-stone-700;
+    @apply mt-4 list-decimal space-y-2 pl-6 text-[1.02rem] leading-8 text-stone-700;
 }
 
 .article-copy hr,
 .markdown-preview hr {
-  @apply my-8 border-0 border-t border-black/10;
+    @apply my-8 border-0 border-t border-black/10;
 }
 
 .article-copy blockquote,
 .markdown-preview blockquote {
-  @apply mt-6 border-l-2 border-black/15 pl-5 italic text-stone-600;
+    @apply mt-6 border-l-2 border-black/15 pl-5 italic text-stone-600;
 }
 
 .article-copy pre,
 .markdown-preview pre {
-  @apply mt-6 overflow-x-auto rounded-[1.25rem] bg-stone-950 px-4 py-4 text-sm leading-7 text-stone-100;
+    @apply mt-6 overflow-x-auto rounded-[1.25rem] bg-stone-950 px-4 py-4 text-sm leading-7 text-stone-100;
 }
 
 .article-copy pre code,
 .markdown-preview pre code {
-  @apply bg-transparent p-0 text-inherit;
+    @apply bg-transparent p-0 text-inherit;
 }
 
 .article-copy a,
 .markdown-preview a {
-  @apply underline decoration-black/30 underline-offset-4 transition hover:decoration-black;
+    @apply underline decoration-black/30 underline-offset-4 transition hover:decoration-black;
 }
 
 .article-copy code,
 .markdown-preview code {
-  @apply rounded bg-stone-100 px-1.5 py-0.5 text-[0.9em];
+    @apply rounded bg-stone-100 px-1.5 py-0.5 text-[0.9em];
 }
 
 .skeleton {
-  @apply rounded-full bg-stone-200/80;
+    @apply rounded-full bg-stone-200/80;
 }

@@ -1,21 +1,20 @@
 import type { ArticleDocument } from "../../models/Article.js";
 import type { CommentDocument } from "../../models/Comment.js";
-import { escapeHtml } from "../html.js";
-import type { TocItem } from "../markdown.js";
+import { escapeHtml } from "../core/shell.js";
+import type { TocItem } from "../core/markdown.js";
 import { articleDisplayDate, formatDate, renderEmptyState } from "./common.js";
 
 export function renderArticleCard(article: ArticleDocument): string {
   return `
-    <article class="panel p-6">
+    <a class="panel block p-6 transition hover:border-black/20 hover:bg-white" href="/articles/${escapeHtml(article.slug)}">
       <p class="eyebrow">${escapeHtml(article.categories[0] ?? "Article")}</p>
-      <h4 class="mt-3 text-2xl font-semibold tracking-[-0.03em] text-black">${escapeHtml(article.title)}</h4>
-      <p class="mt-3 text-sm leading-7 text-stone-600">${escapeHtml(article.summary)}</p>
+      <h4 class="section-title">${escapeHtml(article.title)}</h4>
+      <p class="body-text">${escapeHtml(article.summary)}</p>
       <div class="mt-4 space-y-2 text-sm text-stone-500">
         <div>${escapeHtml(articleDisplayDate(article))}</div>
         <div>By ${escapeHtml(article.authorName)}</div>
       </div>
-      <a class="mt-4 inline-flex nav-chip" href="/articles/${escapeHtml(article.slug)}">Read</a>
-    </article>
+    </a>
   `;
 }
 
@@ -45,10 +44,10 @@ export function renderToc(items: TocItem[]): string {
 export function renderRelatedArticles(related: ArticleDocument[]): string {
   return `
     <section class="panel overflow-hidden">
-      <div class="border-b border-black/10 px-6 py-4 sm:px-8">
+      <header class="panel-head">
         <p class="eyebrow">Similar posts</p>
-        <h3 class="mt-2 text-2xl font-semibold tracking-[-0.03em] text-black">Continue reading</h3>
-      </div>
+        <h3 class="section-title">Continue reading</h3>
+      </header>
       <div class="overflow-x-auto">
         <table class="min-w-full text-left text-sm">
           <thead class="border-b border-black/10 text-stone-500">
@@ -82,12 +81,12 @@ export function renderRelatedArticles(related: ArticleDocument[]): string {
 export function renderComments(article: ArticleDocument, comments: CommentDocument[], canComment: boolean, currentUserName: string): string {
   return `
     <section id="comments" class="panel p-6 sm:p-8">
-      <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-        <div>
+      <div class="page-header items-start gap-5">
+        <header>
           <p class="eyebrow">Discussion</p>
-          <h3 class="mt-2 text-2xl font-semibold tracking-[-0.03em] text-black">Join the conversation</h3>
-          <p class="mt-3 text-sm leading-7 text-stone-600">${comments.length} visible response${comments.length === 1 ? "" : "s"} so far.</p>
-        </div>
+          <h3 class="section-title">Join the conversation</h3>
+          <p class="body-text">${comments.length} visible response${comments.length === 1 ? "" : "s"} so far.</p>
+        </header>
         ${
           canComment
             ? `
@@ -98,17 +97,17 @@ export function renderComments(article: ArticleDocument, comments: CommentDocume
                 hx-post="/articles/${escapeHtml(article.slug)}/comments"
                 hx-push-url="false"
               >
-                <input class="rounded-[1.2rem] border border-black/10 bg-stone-50 px-4 py-3 outline-none transition focus:border-black" name="authorName" type="text" placeholder="Display name" value="${escapeHtml(currentUserName)}" required />
-                <textarea class="min-h-28 rounded-[1.2rem] border border-black/10 bg-stone-50 px-4 py-3 outline-none transition focus:border-black" name="body" placeholder="Share a thoughtful response" required></textarea>
+                <input class="field-input" name="authorName" type="text" placeholder="Display name" value="${escapeHtml(currentUserName)}" required />
+                <textarea class="field-textarea" name="body" placeholder="Share a thoughtful response" required></textarea>
                 <div class="flex justify-end">
                   <button class="nav-chip" type="submit">Post comment</button>
                 </div>
               </form>
             `
             : `
-              <div class="w-full max-w-xl rounded-[1.5rem] border border-black/10 bg-stone-50 p-5 text-sm leading-7 text-stone-600">
+              <p class="body-text w-full max-w-xl rounded-[1.5rem] border border-black/10 bg-stone-50 p-5">
                 Sign in as a viewer or the owner to join the discussion. Readers without an account can still browse the article and existing comments.
-              </div>
+              </p>
             `
         }
       </div>
@@ -121,7 +120,7 @@ export function renderComments(article: ArticleDocument, comments: CommentDocume
                     <p class="font-medium text-black">${escapeHtml(comment.authorName)}</p>
                     <p class="text-sm text-stone-500">${escapeHtml(formatDate(comment.createdAt))}</p>
                   </div>
-                  <p class="mt-3 text-sm leading-7 text-stone-700">${escapeHtml(comment.body)}</p>
+                  <p class="body-text mt-3 text-stone-700">${escapeHtml(comment.body)}</p>
                 </article>
               `).join("")
             : renderEmptyState("No comments yet.")

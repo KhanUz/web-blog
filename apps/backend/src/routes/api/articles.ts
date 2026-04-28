@@ -1,12 +1,12 @@
 import { Router } from "express";
 import mongoose from "mongoose";
-import { asyncHandler } from "../lib/asyncHandler.js";
-import { ensureArticleAccess, ensureArticleManagement, requireRole } from "../lib/auth.js";
-import { HttpError } from "../lib/httpError.js";
-import { serializeArticle, serializeComment } from "../lib/serialize.js";
-import { slugify } from "../lib/slugify.js";
-import { ArticleModel } from "../models/Article.js";
-import { CommentModel } from "../models/Comment.js";
+import { serializeArticle, serializeComment } from "../../lib/api/serialize.js";
+import { ensureArticleAccess, ensureArticleManagement, requireRole } from "../../lib/auth/auth.js";
+import { slugify } from "../../lib/content/slugify.js";
+import { asyncHandler } from "../../lib/http/asyncHandler.js";
+import { HttpError } from "../../lib/http/httpError.js";
+import { ArticleModel } from "../../models/Article.js";
+import { CommentModel } from "../../models/Comment.js";
 
 export const articlesRouter = Router();
 

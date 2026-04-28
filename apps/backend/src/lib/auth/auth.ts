@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import type express from "express";
-import { HttpError } from "./httpError.js";
-import { UserModel } from "../models/User.js";
-import type { ArticleDocument } from "../models/Article.js";
-import type { UserDocument } from "../models/User.js";
-import type { UserRole } from "../types/blog.js";
+import { HttpError } from "../http/httpError.js";
+import { UserModel } from "../../models/User.js";
+import type { ArticleDocument } from "../../models/Article.js";
+import type { UserDocument } from "../../models/User.js";
+import type { UserRole } from "../../types/blog.js";
 import { hashSessionToken } from "./passwords.js";
 import { readSessionToken } from "./session.js";
 

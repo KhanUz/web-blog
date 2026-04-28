@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { asyncHandler } from "../lib/asyncHandler.js";
-import { requireAuthenticated } from "../lib/auth.js";
-import { HttpError } from "../lib/httpError.js";
-import { createSessionToken, hashPassword, hashSessionToken, verifyPassword } from "../lib/passwords.js";
-import { clearSessionCookie, setSessionCookie } from "../lib/session.js";
-import { serializeUser } from "../lib/serialize.js";
-import { UserModel } from "../models/User.js";
-import type { UserRole } from "../types/blog.js";
+import { serializeUser } from "../../lib/api/serialize.js";
+import { createSessionToken, hashPassword, hashSessionToken, verifyPassword } from "../../lib/auth/passwords.js";
+import { requireAuthenticated } from "../../lib/auth/auth.js";
+import { clearSessionCookie, setSessionCookie } from "../../lib/auth/session.js";
+import { asyncHandler } from "../../lib/http/asyncHandler.js";
+import { HttpError } from "../../lib/http/httpError.js";
+import { UserModel } from "../../models/User.js";
+import type { UserRole } from "../../types/blog.js";
 
 export const usersRouter = Router();
 

@@ -4,10 +4,10 @@ import { renderManageTable } from "../components/forms.js";
 export function renderManagePage(articles: ArticleDocument[]): string {
   return `
     <section class="space-y-8">
-      <header class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <header class="page-header">
         <div>
           <p class="eyebrow">Owner workspace</p>
-          <h2 class="mt-3 text-4xl font-semibold tracking-[-0.04em] text-black">
+          <h2 class="page-title">
             Publish, revise, and organize your writing from one place.
           </h2>
         </div>

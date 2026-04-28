@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import { ArticleModel } from "../models/Article.js";
-import { CommentModel } from "../models/Comment.js";
-import { ProfileModel } from "../models/Profile.js";
-import { UserModel } from "../models/User.js";
-import { hashPassword } from "./passwords.js";
+import { ArticleModel } from "../../models/Article.js";
+import { CommentModel } from "../../models/Comment.js";
+import { ProfileModel } from "../../models/Profile.js";
+import { UserModel } from "../../models/User.js";
+import { hashPassword } from "../auth/passwords.js";
 
 export async function seedDatabase(): Promise<void> {
   if (mongoose.connection.readyState !== 1) {

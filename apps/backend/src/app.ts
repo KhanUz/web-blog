@@ -2,14 +2,14 @@ import cors from "cors";
 import express from "express";
 import morgan from "morgan";
 import { resolve } from "node:path";
-import { resolveCurrentUser } from "./lib/auth.js";
-import { HttpError } from "./lib/httpError.js";
-import { articlesRouter } from "./routes/articles.js";
-import { healthRouter } from "./routes/health.js";
-import { metaRouter } from "./routes/meta.js";
-import { siteRouter } from "./routes/site.js";
-import { usersRouter } from "./routes/users.js";
-import { getFrontendDistDir } from "./ui/assets.js";
+import { resolveCurrentUser } from "./lib/auth/auth.js";
+import { HttpError } from "./lib/http/httpError.js";
+import { articlesRouter } from "./routes/api/articles.js";
+import { healthRouter } from "./routes/api/health.js";
+import { metaRouter } from "./routes/api/meta.js";
+import { usersRouter } from "./routes/api/users.js";
+import { siteRouter } from "./routes/web/site.js";
+import { getFrontendDistDir } from "./ui/core/assets.js";
 
 export function createApp() {
   const app = express();

@@ -18,7 +18,7 @@ export default defineConfig({
         target: backendTarget,
         changeOrigin: true
       },
-      "^/(?!@vite|src/|node_modules/|assets/|favicon\\.ico|index\\.html$).*": {
+      "^/(?!@vite|@fs|src/|node_modules/|assets/|favicon\\.ico|index\\.html$).*": {
         target: backendTarget,
         changeOrigin: true
       }

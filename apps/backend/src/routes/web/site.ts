@@ -1,23 +1,25 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
 import mongoose from "mongoose";
-import { asyncHandler } from "../lib/asyncHandler.js";
-import { ensureArticleAccess, ensureArticleManagement, requireAuthenticated, requireRole } from "../lib/auth.js";
-import { HttpError } from "../lib/httpError.js";
-import { clearSessionCookie, setSessionCookie } from "../lib/session.js";
-import { createSessionToken, hashPassword, hashSessionToken, verifyPassword } from "../lib/passwords.js";
-import { slugify } from "../lib/slugify.js";
-import { ArticleModel } from "../models/Article.js";
-import { CommentModel } from "../models/Comment.js";
-import { ProfileModel } from "../models/Profile.js";
-import { UserModel } from "../models/User.js";
-import { renderDocument, type Notice } from "../ui/html.js";
-import { renderAboutPage } from "../ui/pages/about.js";
-import { renderArticlePage } from "../ui/pages/article.js";
-import { renderEditorPage } from "../ui/pages/editor.js";
-import { renderHomePage } from "../ui/pages/home.js";
-import { renderManagePage } from "../ui/pages/manage.js";
-import { renderSearchPage } from "../ui/pages/search.js";
+import { createSessionToken, hashPassword, hashSessionToken, verifyPassword } from "../../lib/auth/passwords.js";
+import { ensureArticleAccess, ensureArticleManagement, requireAuthenticated, requireRole } from "../../lib/auth/auth.js";
+import { clearSessionCookie, setSessionCookie } from "../../lib/auth/session.js";
+import { slugify } from "../../lib/content/slugify.js";
+import { asyncHandler } from "../../lib/http/asyncHandler.js";
+import { HttpError } from "../../lib/http/httpError.js";
+import { ArticleModel } from "../../models/Article.js";
+import { CommentModel } from "../../models/Comment.js";
+import { ProfileModel } from "../../models/Profile.js";
+import { UserModel } from "../../models/User.js";
+import { renderDocument, type Notice } from "../../ui/core/shell.js";
+import type { AccountGuestMode } from "../../ui/components/forms.js";
+import { renderAccountPage } from "../../ui/pages/account.js";
+import { renderAboutPage } from "../../ui/pages/about.js";
+import { renderArticlePage } from "../../ui/pages/article.js";
+import { renderEditorPage } from "../../ui/pages/editor.js";
+import { renderHomePage } from "../../ui/pages/home.js";
+import { renderManagePage } from "../../ui/pages/manage.js";
+import { renderSearchPage } from "../../ui/pages/search.js";
 
 export const siteRouter = Router();
 
@@ -71,6 +73,10 @@ function getRouteParam(value: string | string[] | undefined, fieldName: string):
   return value;
 }
 
+function getAccountGuestMode(value: unknown): AccountGuestMode {
+  return value === "register" ? "register" : "login";
+}
+
 async function getArticleHref(): Promise<string> {
   const article = await ArticleModel.findOne({
     removedFromSiteAt: null,
@@ -85,7 +91,7 @@ async function sendPage(
   response: Response,
   page: {
     title: string;
-    activePage: "home" | "article" | "manage" | "editor" | "search" | "about";
+    activePage: "home" | "article" | "manage" | "editor" | "search" | "about" | "account";
     content: string;
     notice?: Notice;
   }
@@ -267,10 +273,21 @@ async function renderAbout(request: Request, response: Response, notice?: Notice
   const profile = await ProfileModel.findOne().sort({ createdAt: 1 });
 
   await sendPage(request, response, {
-    title: "About / Account",
+    title: "About",
     activePage: "about",
     notice,
-    content: renderAboutPage(profile, request.currentUser)
+    content: renderAboutPage(profile)
+  });
+}
+
+async function renderAccount(request: Request, response: Response, notice?: Notice, guestMode?: AccountGuestMode): Promise<void> {
+  const resolvedGuestMode = guestMode ?? getAccountGuestMode(request.query.mode);
+
+  await sendPage(request, response, {
+    title: request.currentUser ? "Account" : "Sign in",
+    activePage: "account",
+    notice,
+    content: renderAccountPage(request.currentUser, resolvedGuestMode)
   });
 }
 
@@ -442,13 +459,17 @@ siteRouter.get("/about", asyncHandler(async (request, response) => {
   await renderAbout(request, response);
 }));
 
+siteRouter.get("/account", asyncHandler(async (request, response) => {
+  await renderAccount(request, response);
+}));
+
 siteRouter.post("/auth/register", asyncHandler(async (request, response) => {
   const email = requireString(request.body.email, "email").toLowerCase();
   const password = requireString(request.body.password, "password");
   const existing = await UserModel.findOne({ email });
 
   if (existing) {
-    await renderAbout(request, response, { tone: "error", message: "An account with that email already exists." });
+    await renderAccount(request, response, { tone: "error", message: "An account with that email already exists." }, "register");
     return;
   }
 
@@ -467,7 +488,7 @@ siteRouter.post("/auth/register", asyncHandler(async (request, response) => {
   request.currentUser = await UserModel.findOne({ email, active: true });
   request.actorRole = request.currentUser?.role ?? "guest";
 
-  await renderAbout(request, response, { tone: "ok", message: "Viewer account created and selected." });
+  await renderAccount(request, response, { tone: "ok", message: "Viewer account created and selected." });
 }));
 
 siteRouter.post("/auth/login", asyncHandler(async (request, response) => {
@@ -476,7 +497,7 @@ siteRouter.post("/auth/login", asyncHandler(async (request, response) => {
   const user = await UserModel.findOne({ email, active: true });
 
   if (!user || !verifyPassword(password, user.passwordHash)) {
-    await renderAbout(request, response, { tone: "error", message: "Invalid email or password." });
+    await renderAccount(request, response, { tone: "error", message: "Invalid email or password." });
     return;
   }
 
@@ -488,7 +509,7 @@ siteRouter.post("/auth/login", asyncHandler(async (request, response) => {
   request.currentUser = user;
   request.actorRole = user.role;
 
-  await renderHome(request, response, { tone: "ok", message: "Logged in." });
+  await renderAccount(request, response, { tone: "ok", message: "Logged in." });
 }));
 
 siteRouter.post("/auth/logout", asyncHandler(async (request, response) => {
@@ -518,5 +539,5 @@ siteRouter.post("/account/profile", asyncHandler(async (request, response) => {
   await user.save();
   request.currentUser = user;
 
-  await renderAbout(request, response, { tone: "ok", message: "Profile updated." });
+  await renderAccount(request, response, { tone: "ok", message: "Profile updated." });
 }));

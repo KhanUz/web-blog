@@ -1,6 +1,6 @@
 import { marked } from "marked";
 
-import { escapeHtml } from "./html.js";
+import { escapeHtml } from "./shell.js";
 
 export type TocItem = {
   id: string;
