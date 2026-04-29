@@ -6,3 +6,4 @@ dist/
 coverage/
 db/*
 !db/.gitkeep
+项目技术报告.md
