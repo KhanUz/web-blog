@@ -35,7 +35,7 @@ export function renderSearchPage(
     return `
     <section class="space-y-8">
       <header>
-        <p class="eyebrow">Search and tags</p>
+        <p class="eyebrow">Search articles</p>
         <h2 class="page-title">Full-text search over published writing</h2>
       </header>
 

@@ -6,7 +6,7 @@ import type { ArticleDocument } from "../../models/Article.js";
 import type { UserDocument } from "../../models/User.js";
 import type { UserRole } from "../../types/blog.js";
 import { hashSessionToken } from "./passwords.js";
-import { readSessionToken } from "./session.js";
+import { clearSessionCookie, readBearerToken, readSessionCookieToken } from "./session.js";
 
 function getHeaderValue(value: string | string[] | undefined): string | undefined {
   if (typeof value === "string") {
@@ -22,11 +22,13 @@ function getHeaderValue(value: string | string[] | undefined): string | undefine
 
 export async function resolveCurrentUser(
   request: express.Request,
-  _response: express.Response,
+  response: express.Response,
   next: express.NextFunction
 ): Promise<void> {
   const authHeader = getHeaderValue(request.header("authorization"));
-  const token = readSessionToken(request) ?? (authHeader?.startsWith("Bearer ") ? authHeader.slice(7).trim() : undefined);
+  const bearerToken = readBearerToken(request) ?? (authHeader?.startsWith("Bearer ") ? authHeader.slice(7).trim() : undefined);
+  const cookieToken = readSessionCookieToken(request);
+  const token = bearerToken ?? cookieToken;
 
   request.currentUser = null;
   request.actorRole = "guest";
@@ -43,7 +45,16 @@ export async function resolveCurrentUser(
   });
 
   if (!user) {
-    next(new HttpError(401, "Authenticated session was not found or is inactive."));
+    if (bearerToken) {
+      next(new HttpError(401, "Authenticated session was not found or is inactive."));
+      return;
+    }
+
+    if (cookieToken) {
+      clearSessionCookie(response);
+    }
+
+    next();
     return;
   }
 

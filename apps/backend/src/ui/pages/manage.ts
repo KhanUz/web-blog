@@ -2,11 +2,11 @@ import type { ArticleDocument } from "../../models/Article.js";
 import { renderManageTable } from "../components/forms.js";
 
 export function renderManagePage(articles: ArticleDocument[]): string {
-  return `
+    return `
     <section class="flex h-full flex-col space-y-8">
       <header class="page-header">
         <div>
-          <p class="eyebrow">Owner workspace</p>
+          <p class="eyebrow">Workspace</p>
           <h2 class="page-title">
             Publish, revise, and organize your writing from one place.
           </h2>

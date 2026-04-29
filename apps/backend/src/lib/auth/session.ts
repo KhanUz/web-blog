@@ -29,18 +29,20 @@ function parseCookieHeader(header: string | undefined): Record<string, string> {
     }, {});
 }
 
-export function readSessionToken(request: express.Request): string | undefined {
+export function readBearerToken(request: express.Request): string | undefined {
   const authHeader = request.header("authorization");
-  const bearerToken = typeof authHeader === "string" && authHeader.startsWith("Bearer ")
+  return typeof authHeader === "string" && authHeader.startsWith("Bearer ")
     ? authHeader.slice(7).trim()
     : undefined;
+}
 
-  if (bearerToken) {
-    return bearerToken;
-  }
-
+export function readSessionCookieToken(request: express.Request): string | undefined {
   const cookies = parseCookieHeader(request.header("cookie"));
   return cookies[SESSION_COOKIE_NAME];
+}
+
+export function readSessionToken(request: express.Request): string | undefined {
+  return readBearerToken(request) ?? readSessionCookieToken(request);
 }
 
 function buildCookieValue(value: string, maxAgeSeconds?: number): string {

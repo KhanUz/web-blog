@@ -15,9 +15,9 @@ export function renderHomePage(
     <section class="space-y-8">
       <div class="grid gap-5 lg:grid-cols-[1.2fr_0.8fr]">
         <article class="panel p-6 sm:p-8">
-          <p class="eyebrow">About this publication</p>
+          <p class="eyebrow">Main</p>
           <h2 class="page-title max-w-3xl sm:text-5xl">
-            ${escapeHtml(profile?.name ?? "Olim")}
+            ${escapeHtml(profile?.name ?? "Alim")}
           </h2>
           <p class="mt-3 text-sm uppercase tracking-[0.28em] text-stone-500">${escapeHtml(profile?.role ?? "Designer, developer, and independent publisher")}</p>
           <p class="mt-5 max-w-3xl text-base leading-8 text-stone-700">
@@ -56,7 +56,7 @@ export function renderHomePage(
             <h3 class="section-title-lg">Recent articles</h3>
           </header>
           <p class="body-text max-w-2xl">
-            A short path into the writing, with recent posts linked directly from the homepage.
+            Explore the latest articles
           </p>
         </div>
         <div class="mt-6 grid gap-5 lg:grid-cols-3">

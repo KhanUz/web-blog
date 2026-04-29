@@ -7,7 +7,7 @@ import { articleDisplayDate, renderTagList } from "./common.js";
 export type AccountGuestMode = "login" | "register";
 
 export function renderManageTable(articles: ArticleDocument[]): string {
-  return `
+    return `
     <section class="panel flex flex-1 flex-col overflow-hidden">
       <header class="panel-head flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -30,8 +30,10 @@ export function renderManageTable(articles: ArticleDocument[]): string {
           </thead>
           <tbody>
             ${
-              articles.length > 0
-                ? articles.map((article) => `
+                articles.length > 0
+                    ? articles
+                          .map(
+                              (article) => `
                     <tr class="border-b border-black/5 last:border-b-0">
                       <td class="px-6 py-5 sm:px-8">
                         <p class="font-medium text-black">${escapeHtml(article.title)}</p>
@@ -52,8 +54,10 @@ export function renderManageTable(articles: ArticleDocument[]): string {
                         </div>
                       </td>
                     </tr>
-                  `).join("")
-                : `<tr><td class="px-6 py-5 text-stone-500 sm:px-8" colspan="4">No articles are available in the owner workspace yet.</td></tr>`
+                  `,
+                          )
+                          .join("")
+                    : `<tr><td class="px-6 py-5 text-stone-500 sm:px-8" colspan="4">No articles are available in the owner workspace yet.</td></tr>`
             }
           </tbody>
         </table>
@@ -62,8 +66,11 @@ export function renderManageTable(articles: ArticleDocument[]): string {
   `;
 }
 
-export function renderEditorForm(article: ArticleDocument | null, initialMarkdown: string): string {
-  return `
+export function renderEditorForm(
+    article: ArticleDocument | null,
+    initialMarkdown: string,
+): string {
+    return `
     <form action="${article ? `/manage/articles/${String(article._id)}` : "/manage/articles"}" method="post" class="space-y-6">
       <section class="panel p-5 sm:p-6">
         <header class="panel-head-compact">
@@ -113,14 +120,14 @@ export function renderEditorForm(article: ArticleDocument | null, initialMarkdow
 }
 
 export function renderProfilePanel(profile: ProfileDocument | null): string {
-  return `
+    return `
     <section class="panel-muted p-6 sm:p-8">
       <p class="eyebrow !text-stone-400">About the blog</p>
       <div class="mt-5">
         <div class="flex h-32 w-32 items-center justify-center rounded-full border border-white/15 text-3xl font-semibold text-white">
-          ${escapeHtml((profile?.name ?? "WB").slice(0, 2).toUpperCase())}
+          <span>${escapeHtml(profile?.name ? profile.name.slice(0, 2).toUpperCase() : "N/A")}</span>
         </div>
-        <h3 class="section-title mt-4 text-white">${escapeHtml(profile?.name ?? "No profile yet")}</h3>
+        <h3 class="text-3xl mt-4 text-white">${escapeHtml(profile?.name ?? "No profile yet")}</h3>
         <p class="body-text-muted mt-2">${escapeHtml(profile?.role ?? "Site profile data is not configured yet.")}</p>
         <p class="body-text-muted mt-4">${escapeHtml(profile?.bio ?? "Create site profile content in the backend to populate this panel.")}</p>
         <div class="flex flex-wrap gap-2">${renderTagList(profile?.topics ?? [])}</div>
@@ -129,9 +136,12 @@ export function renderProfilePanel(profile: ProfileDocument | null): string {
   `;
 }
 
-export function renderAccountPanel(currentUser: UserDocument | null, guestMode: AccountGuestMode = "login"): string {
-  if (currentUser) {
-    return `
+export function renderAccountPanel(
+    currentUser: UserDocument | null,
+    guestMode: AccountGuestMode = "login",
+): string {
+    if (currentUser) {
+        return `
       <section class="panel p-6 sm:p-8">
         <p class="eyebrow">Account</p>
         <h3 class="section-title">Update your account</h3>
@@ -152,19 +162,19 @@ export function renderAccountPanel(currentUser: UserDocument | null, guestMode: 
         </div>
       </section>
     `;
-  }
+    }
 
-  const showLogin = guestMode !== "register";
+    const showLogin = guestMode !== "register";
 
-  return `
+    return `
     <section class="panel p-6 sm:p-8">
       <div class="panel-head-compact flex flex-wrap gap-2">
         <a class="nav-chip" data-active="${String(showLogin)}" href="/account">Log in</a>
         <a class="nav-chip" data-active="${String(!showLogin)}" href="/account?mode=register">Sign in</a>
       </div>
       ${
-        showLogin
-          ? `
+          showLogin
+              ? `
             <h3 class="section-title mt-5">Log in</h3>
             <form class="mt-5 grid gap-4" action="/auth/login" method="post" hx-post="/auth/login" hx-push-url="false">
               <input class="field-input" name="email" type="email" placeholder="Email" required />
@@ -179,7 +189,7 @@ export function renderAccountPanel(currentUser: UserDocument | null, guestMode: 
               <p>Owner: <code>owner@example.com</code> / <code>owner123</code></p>
             </div>
           `
-          : `
+              : `
             <h3 class="section-title mt-5">Create a viewer account</h3>
             <p class="body-text mt-3">Reading stays open to everyone. Create a viewer account if you want to comment and keep a simple public profile.</p>
             <form class="mt-5 grid gap-4" action="/auth/register" method="post" hx-post="/auth/register" hx-push-url="false">

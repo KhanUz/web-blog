@@ -70,7 +70,7 @@ stream_logs() {
 
 start_service() {
   local name="$1"
-  local workdir="$2"
+  local workdir="$2"    
   local command="$3"
   local logfile="$4"
 

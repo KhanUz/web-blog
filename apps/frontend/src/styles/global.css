@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@source "../../../backend/src/ui/**/*.{ts,js}";
 
 :root {
     color-scheme: light;
@@ -199,7 +200,7 @@ pre {
 }
 
 .tag-pill {
-    @apply rounded-full border border-black/10 px-3 py-2 text-sm text-stone-600;
+    @apply rounded-full border border-black/15 px-3 py-2 text-sm text-stone-600;
 }
 
 .tag-pill-muted {
