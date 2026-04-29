@@ -2,6 +2,67 @@
 
 Workspace scaffold for a split frontend and backend application.
 
+## Repository
+
+Remote repository:
+
+```bash
+https://github.com/KhanUz/web-blog
+```
+
+## Installation
+
+### Requirements
+
+- Node.js `>= 20`
+- npm
+- MongoDB
+
+### Clone and install
+
+```bash
+git clone https://github.com/KhanUz/web-blog.git
+cd web-blog
+npm install
+```
+
+### Start MongoDB
+
+If `mongod` is installed locally, you can use the prepared `db/` directory:
+
+```bash
+cd apps/backend
+npm run db:start
+```
+
+MongoDB is expected to run at:
+
+```bash
+mongodb://127.0.0.1:27017/web-blog
+```
+
+### Run the project
+
+From the project root:
+
+```bash
+npm run dev:all
+```
+
+Or run frontend and backend separately:
+
+```bash
+npm run dev:backend
+npm run dev:frontend
+```
+
+### Build and type-check
+
+```bash
+npm run build
+npm run check
+```
+
 ## Apps
 
 - `apps/frontend`: Vite + TypeScript + HTMX + Tailwind CSS
