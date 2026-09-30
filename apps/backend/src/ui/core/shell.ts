@@ -113,6 +113,20 @@ export function renderDocument(page: ShellPage): string {
         ${renderFrontendAssetTags()}
       </head>
       <body>
+        <script src="https://agent.hust.edu.cn/resources/product/llm/public/sdk/embedLite.js"></script>
+        <script>
+          window.addEventListener("load", () => {
+            if (!window.HiagentWebSDK?.WebLiteClient) {
+              console.error("HiagentWebSDK.WebLiteClient is unavailable");
+              return;
+            }
+
+            new window.HiagentWebSDK.WebLiteClient({
+              appKey: "dauav8e2rbu2v850gtbg",
+              baseUrl: "https://agent.hust.edu.cn"
+            });
+          });
+        </script>
         ${renderAppShell(page)}
       </body>
     </html>
