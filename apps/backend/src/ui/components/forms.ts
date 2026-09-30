@@ -86,30 +86,16 @@ export function renderEditorForm(
         </div>
       </section>
 
-      <div class="grid gap-6 xl:grid-cols-2 xl:items-stretch" data-editor-shell>
-        <section class="panel flex h-full flex-col p-5 sm:p-6">
+      <section class="panel flex flex-col p-5 sm:p-6" data-editor-shell>
           <header class="panel-head-compact">
             <p class="text-sm font-medium text-black">Content editor</p>
-            <p class="body-text mt-1">Write the main article body here. Markdown updates the preview immediately.</p>
+            <p class="body-text mt-1">Write your article with instant visual updates.</p>
           </header>
-          <div class="mt-5 flex-1">
-            <textarea
-              class="editor-textarea field-textarea min-h-[28rem] rounded-[1.5rem] py-4"
-              name="content"
-              data-editor-input
-              required
-            >${escapeHtml(article?.content ?? initialMarkdown)}</textarea>
+          <div class="mt-5 flex flex-1 flex-col">
+            <div class="editor-quill min-h-[28rem] rounded-[1.5rem]" data-quill-editor></div>
+            <input type="hidden" name="content" data-editor-content value="${escapeHtml(article?.content ?? initialMarkdown)}" data-editor-input />
           </div>
-        </section>
-
-        <section class="panel flex h-full flex-col p-5 sm:p-6">
-          <header class="panel-head-compact">
-            <p class="text-sm font-medium text-black">Preview</p>
-            <p class="body-text mt-1">Headings, lists, links, and code blocks render as you type.</p>
-          </header>
-          <article class="markdown-preview flex-1 pt-5" data-editor-preview></article>
-        </section>
-      </div>
+      </section>
 
       <div class="flex flex-wrap gap-2">
         <button class="nav-chip" type="submit" name="intent" value="draft">${escapeHtml(article ? "Update draft" : "Save draft")}</button>

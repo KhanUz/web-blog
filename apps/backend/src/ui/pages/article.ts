@@ -41,7 +41,7 @@ export function renderArticlePage(
               `).join("")}
             </div>
 
-            <div class="article-copy pt-8">${articleContent.html}</div>
+            <div class="article-copy pt-8" data-quill-viewer data-quill-content="${escapeHtml(article.content)}"></div>
           </article>
 
           ${renderRelatedArticles(related)}

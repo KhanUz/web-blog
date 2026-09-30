@@ -23,20 +23,19 @@ import { renderSearchPage } from "../../ui/pages/search.js";
 
 export const siteRouter = Router();
 
-const INITIAL_MARKDOWN = `# Designing Calm Interfaces
-
-Minimal blog systems should disappear behind the writing.
-
-## Why this layout works
-
-- The navigation stays available but does not follow the reader.
-- The table of contents helps with long-form articles.
-- The reading column gets the majority of the width.
-
-### Editorial rhythm
-
-Thoughtful spacing creates structure without relying on heavy decoration.
-`;
+const INITIAL_QUILL_CONTENT = JSON.stringify({
+  ops: [
+    { insert: "Designing Calm Interfaces" },
+    { insert: "\n", attributes: { header: 1 } },
+    { insert: "Minimal blog systems should disappear behind the writing.\n\n" },
+    { insert: "Why this layout works" },
+    { insert: "\n", attributes: { header: 2 } },
+    { insert: "- The navigation stays available but does not follow the reader.\n- The table of contents helps with long-form articles.\n- The reading column gets the majority of the width.\n" },
+    { insert: "Editorial rhythm" },
+    { insert: "\n", attributes: { header: 3 } },
+    { insert: "Thoughtful spacing creates structure without relying on heavy decoration.\n" }
+  ]
+});
 
 function parseStringList(value: string): string[] {
   return value
@@ -51,6 +50,28 @@ function requireString(value: unknown, fieldName: string): string {
   }
 
   return value.trim();
+}
+
+function requireArticleContent(value: unknown): string {
+  const content = requireString(value, "content");
+
+  try {
+    const parsed: unknown = JSON.parse(content);
+
+    if (typeof parsed !== "object" || parsed === null || !Array.isArray((parsed as { ops?: unknown }).ops)) {
+      throw new Error("Invalid Delta shape");
+    }
+
+    return content;
+  } catch {
+    // Existing articles may still contain Markdown. The browser migrates them
+    // to Delta when they are opened and saved in the Quill editor.
+    return content;
+  }
+}
+
+function isDuplicateKeyError(error: unknown): boolean {
+  return typeof error === "object" && error !== null && "code" in error && error.code === 11000;
 }
 
 function readOptionalString(value: unknown): string {
@@ -201,7 +222,7 @@ async function renderEditor(
     title: article ? `Edit ${article.title}` : "Create Article",
     activePage: "editor",
     notice,
-    content: renderEditorPage(article, INITIAL_MARKDOWN)
+    content: renderEditorPage(article, INITIAL_QUILL_CONTENT)
   });
 }
 
@@ -327,7 +348,7 @@ siteRouter.post("/manage/articles", asyncHandler(async (request, response) => {
   const user = requireRole(request, ["owner"]);
   const title = requireString(request.body.title, "title");
   const summary = requireString(request.body.summary, "summary");
-  const content = requireString(request.body.content, "content");
+  const content = requireArticleContent(request.body.content);
   const slug = readOptionalString(request.body.slug) ? slugify(String(request.body.slug)) : slugify(title);
 
   const existing = await ArticleModel.findOne({ slug });
@@ -336,18 +357,29 @@ siteRouter.post("/manage/articles", asyncHandler(async (request, response) => {
     return;
   }
 
-  const article = await ArticleModel.create({
-    author: user._id,
-    authorName: user.name,
-    title,
-    slug,
-    summary,
-    content,
-    categories: parseStringList(readOptionalString(request.body.categories)),
-    tags: parseStringList(readOptionalString(request.body.tags)),
-    status: request.body.intent === "publish" ? "published" : "draft",
-    publishedAt: request.body.intent === "publish" ? new Date() : null
-  });
+  let article;
+
+  try {
+    article = await ArticleModel.create({
+      author: user._id,
+      authorName: user.name,
+      title,
+      slug,
+      summary,
+      content,
+      categories: parseStringList(readOptionalString(request.body.categories)),
+      tags: parseStringList(readOptionalString(request.body.tags)),
+      status: request.body.intent === "publish" ? "published" : "draft",
+      publishedAt: request.body.intent === "publish" ? new Date() : null
+    });
+  } catch (error) {
+    if (isDuplicateKeyError(error)) {
+      await renderEditor(request, response, null, { tone: "error", message: "An article with that slug already exists." });
+      return;
+    }
+
+    throw error;
+  }
 
   await renderEditor(request, response, String(article._id), {
     tone: "ok",
@@ -366,7 +398,7 @@ siteRouter.post("/manage/articles/:id", asyncHandler(async (request, response) =
 
   article.title = requireString(request.body.title, "title");
   article.summary = requireString(request.body.summary, "summary");
-  article.content = requireString(request.body.content, "content");
+  article.content = requireArticleContent(request.body.content);
   article.slug = readOptionalString(request.body.slug) ? slugify(String(request.body.slug)) : slugify(article.title);
   article.categories = parseStringList(readOptionalString(request.body.categories));
   article.tags = parseStringList(readOptionalString(request.body.tags));

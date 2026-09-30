@@ -69,6 +69,45 @@ textarea {
     overflow-y: hidden;
 }
 
+.editor-quill {
+    @apply overflow-hidden rounded-[1.5rem] border border-black/10 bg-stone-50;
+}
+
+.editor-quill .ql-container {
+    min-height: 25rem;
+    border: 0;
+    border-radius: 0 0 1.5rem 1.5rem;
+    font: inherit;
+}
+
+.editor-quill .ql-toolbar {
+    border-radius: 1.5rem 1.5rem 0 0;
+    border: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-quill-viewer] {
+    min-height: 1px;
+}
+
+[data-quill-viewer] .ql-container {
+    border: 0;
+    font: inherit;
+}
+
+[data-quill-viewer] .ql-editor {
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    outline: 0;
+}
+
+[data-quill-viewer] img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
 code,
 pre {
     font-family: "IBM Plex Mono", "Cascadia Code", "Consolas", monospace;

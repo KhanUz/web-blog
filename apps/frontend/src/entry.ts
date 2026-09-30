@@ -1,5 +1,8 @@
-import "./styles/global.css";
 import { marked } from "marked";
+import Quill from "quill";
+import type { Op } from "quill";
+import "quill/dist/quill.snow.css";
+import "./styles/global.css";
 
 type PreviewScope = ParentNode;
 let cleanupToc: (() => void) | null = null;
@@ -9,13 +12,33 @@ marked.setOptions({
   breaks: true
 });
 
-function syncEditorHeight(textarea: HTMLTextAreaElement): void {
-  textarea.style.height = "auto";
-  textarea.style.height = `${textarea.scrollHeight}px`;
+type QuillDelta = {
+  ops: Array<{ insert: string | Record<string, unknown>; attributes?: Record<string, unknown> }>;
+};
+
+function parseDelta(value: string): QuillDelta | null {
+  try {
+    const parsed: unknown = JSON.parse(value);
+
+    if (typeof parsed !== "object" || parsed === null || !Array.isArray((parsed as { ops?: unknown }).ops)) {
+      return null;
+    }
+
+    return parsed as QuillDelta;
+  } catch {
+    return null;
+  }
 }
 
-function renderMarkdown(markdown: string): string {
-  return marked.parse(markdown) as string;
+function loadQuillContent(quill: Quill, value: string): void {
+  const delta = parseDelta(value);
+
+  if (delta) {
+    quill.setContents(delta.ops as Op[]);
+    return;
+  }
+
+  quill.clipboard.dangerouslyPasteHTML(marked.parse(value) as string);
 }
 
 function getEditorShells(scope: PreviewScope): HTMLElement[] {
@@ -42,21 +65,52 @@ function setupEditorPreview(scope: PreviewScope): void {
   const shells = getEditorShells(scope);
 
   shells.forEach((shell) => {
-    const input = shell.querySelector<HTMLTextAreaElement>("[data-editor-input]");
-    const output = shell.querySelector<HTMLElement>("[data-editor-preview]");
+    const input = shell.querySelector<HTMLInputElement>("[data-editor-input]");
+    const content = shell.querySelector<HTMLInputElement>("[data-editor-content]");
+    const quillElement = shell.querySelector<HTMLElement>("[data-quill-editor]");
 
-    if (!input || !output || shell.dataset.previewReady === "true") {
+    if (!input || !content || !quillElement || shell.dataset.previewReady === "true") {
       return;
     }
 
-    const syncPreview = () => {
-      output.innerHTML = renderMarkdown(input.value);
-      syncEditorHeight(input);
+    const quill = new Quill(quillElement, { theme: "snow", modules: { toolbar: [["bold", "italic", "underline"], [{ header: [1, 2, 3, false] }], [{ list: "ordered" }, { list: "bullet" }], ["blockquote", "code-block", "link", "image"], ["clean"]] } });
+    const syncContent = () => {
+      const delta = quill.getContents();
+      const serialized = JSON.stringify(delta);
+      input.value = serialized;
+      content.value = serialized;
     };
 
-    syncPreview();
-    input.addEventListener("input", syncPreview);
+    loadQuillContent(quill, input.value);
+    syncContent();
+    quill.on("text-change", syncContent);
+    shell.closest("form")?.addEventListener("submit", syncContent);
     shell.dataset.previewReady = "true";
+  });
+}
+
+function setupQuillViewers(scope: PreviewScope): void {
+  const viewers = Array.from(scope.querySelectorAll<HTMLElement>("[data-quill-viewer]"));
+
+  if (scope instanceof HTMLElement && scope.matches("[data-quill-viewer]")) {
+    viewers.unshift(scope);
+  }
+
+  viewers.forEach((viewer) => {
+    if (viewer.dataset.viewerReady === "true") {
+      return;
+    }
+
+    const quill = new Quill(viewer, { readOnly: true, modules: { toolbar: false } });
+    loadQuillContent(quill, viewer.dataset.quillContent ?? "");
+    const usedIds = new Map<string, number>();
+    viewer.querySelectorAll<HTMLElement>("h1, h2, h3").forEach((heading) => {
+      const base = heading.textContent?.toLowerCase().trim().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-") || "section";
+      const count = usedIds.get(base) ?? 0;
+      usedIds.set(base, count + 1);
+      heading.id = count === 0 ? base : `${base}-${count + 1}`;
+    });
+    viewer.dataset.viewerReady = "true";
   });
 }
 
@@ -136,10 +190,12 @@ function setupArticleToc(scope: PreviewScope): void {
 }
 
 setupEditorPreview(document);
+setupQuillViewers(document);
 setupArticleToc(document);
 
 document.addEventListener("DOMContentLoaded", () => {
   setupEditorPreview(document);
+  setupQuillViewers(document);
   setupArticleToc(document);
 });
 
@@ -148,15 +204,18 @@ document.body.addEventListener("htmx:load", (event) => {
 
   if (target instanceof HTMLElement) {
     setupEditorPreview(target);
+    setupQuillViewers(target);
     setupArticleToc(target);
     return;
   }
 
   setupEditorPreview(document);
+  setupQuillViewers(document);
   setupArticleToc(document);
 });
 
 document.body.addEventListener("htmx:afterSwap", () => {
   setupEditorPreview(document);
+  setupQuillViewers(document);
   setupArticleToc(document);
 });
